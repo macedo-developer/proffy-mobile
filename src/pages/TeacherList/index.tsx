@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View } from "react-native";
+import { View, Text, TextInput } from "react-native";
 
 import PageHeader from "../../components/PageHeader";
 import TeacherItem from "../../components/TeacherItem";
@@ -11,7 +11,36 @@ import { ScrollView } from "react-native-gesture-handler";
 function TeacherList() {
   return (
     <View style={styles.container}>
-      <PageHeader title="Proffys Disponíveis" />
+      <PageHeader title="Proffys Disponíveis">
+        <View style={styles.searchForm}>
+          <Text style={styles.label}>Matéria</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Qual matéria?"
+            placeholderTextColor="#c1bccc"
+          />
+
+          <View style={styles.inputGroup}>
+            <View style={styles.inputBlock}>
+              <Text style={styles.label}>Dia da semana</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Qual dia?"
+                placeholderTextColor="#c1bccc"
+              />
+            </View>
+
+            <View style={styles.inputBlock}>
+              <Text style={styles.label}>Horário</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Qual horário?"
+                placeholderTextColor="#c1bccc"
+              />
+            </View>
+          </View>
+        </View>
+      </PageHeader>
 
       <ScrollView
         style={styles.teacherList}
