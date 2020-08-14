@@ -8,12 +8,33 @@ import {
 } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import PageHeader from "../../components/PageHeader";
-import TeacherItem from "../../components/TeacherItem";
+import TeacherItem, { Teacher } from "../../components/TeacherItem";
+import api from "../../services/api";
 
 import styles from "./styles";
 
 function TeacherList() {
-  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [isFilterVisible, setIsFilterVisible] = useState(true);
+
+  const [subject, setSubject] = useState("");
+  const [weekDay, setWeekDay] = useState("");
+  const [time, setTime] = useState("");
+
+  const [teachers, setTeachers] = useState([]);
+
+  async function handleFilterSubmit() {
+    const response = await api.get("classes", {
+      params: {
+        subject,
+        week_day: weekDay,
+        time,
+      },
+    });
+
+    setTeachers(response.data);
+
+    setIsFilterVisible(false);
+  }
 
   function handleToggleFilterVisible() {
     setIsFilterVisible(!isFilterVisible);
@@ -34,6 +55,8 @@ function TeacherList() {
             <Text style={styles.label}>Matéria</Text>
             <TextInput
               style={styles.input}
+              value={subject}
+              onChangeText={(text) => setSubject(text)}
               placeholder="Qual matéria?"
               placeholderTextColor="#c1bccc"
             />
@@ -43,6 +66,8 @@ function TeacherList() {
                 <Text style={styles.label}>Dia da semana</Text>
                 <TextInput
                   style={styles.input}
+                  value={weekDay}
+                  onChangeText={(text) => setWeekDay(text)}
                   placeholder="Qual dia?"
                   placeholderTextColor="#c1bccc"
                 />
@@ -52,13 +77,18 @@ function TeacherList() {
                 <Text style={styles.label}>Horário</Text>
                 <TextInput
                   style={styles.input}
+                  value={time}
+                  onChangeText={(text) => setTime(text)}
                   placeholder="Qual horário?"
                   placeholderTextColor="#c1bccc"
                 />
               </View>
             </View>
 
-            <RectButton style={styles.submitButton}>
+            <RectButton
+              onPress={handleFilterSubmit}
+              style={styles.submitButton}
+            >
               <Text style={styles.submitButtonText}>Filtrar</Text>
             </RectButton>
           </View>
@@ -69,9 +99,9 @@ function TeacherList() {
         style={styles.teacherList}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
       >
-        <TeacherItem />
-        <TeacherItem />
-        <TeacherItem />
+        {teachers.map((teacher: Teacher) => {
+          return <TeacherItem key={teacher.id} teacher={teacher} />;
+        })}
       </ScrollView>
     </View>
   );
